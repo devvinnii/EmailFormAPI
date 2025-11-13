@@ -38,10 +38,4 @@ public class ApplicationController {
 
         return ResponseEntity.status(302).header("Location", "http://localhost:5500/success.html").build();
     }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> test(){
-        emailService.sendTestEmail();
-        return ResponseEntity.ok("E-mail enviado!");
-    }
 }
