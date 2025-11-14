@@ -1,9 +1,8 @@
 package com.sanearh.emailapi.controller;
 
-import com.sanearh.emailapi.dto.EmailRequest;
 import com.sanearh.emailapi.service.EmailService;
 import com.sanearh.emailapi.util.FileValidator;
-import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,21 +20,26 @@ public class ApplicationController {
         this.emailService = emailService;
     }
 
-    @PostMapping(value = "/apply", consumes = "multipart/form-data")
-    public ResponseEntity<String> apply(
-            @Valid @ModelAttribute EmailRequest request,
-            @RequestParam("cv") MultipartFile cv
+    @PostMapping(value = "/apply", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> apply(
+            @RequestPart("name") String name,
+            @RequestPart("phone") String phone,
+            @RequestPart("email") String email,
+            @RequestPart("cv") MultipartFile cv
     ) {
 
         FileValidator.validateCV(cv);
 
-        emailService.sendApplicationEmail(
-                request.getName(),
-                request.getPhone(),
-                request.getEmail(),
-                cv
-        );
+        emailService.sendApplicationEmail(name, phone, email, cv);
 
-        return ResponseEntity.status(302).header("Location", "http://localhost:5500/success.html").build();
+        return ResponseEntity.ok(
+                Map.of("status", "success", "message", "Currículo enviado com sucesso!")
+        );
+    }
+
+    @PostMapping("/debug")
+    public ResponseEntity<String> debug() {
+        System.out.println("CHEGOU NO MÉTODO!");
+        return ResponseEntity.ok("ok");
     }
 }

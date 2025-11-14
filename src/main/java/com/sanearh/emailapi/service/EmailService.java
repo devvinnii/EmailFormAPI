@@ -50,21 +50,4 @@ public class EmailService {
             throw new RuntimeException("Erro ao enviar email: " + e.getMessage());
         }
     }
-
-    public void sendTestEmail() {
-
-        try {
-            MimeMessage msg = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(msg, true);
-
-            helper.setTo(destino);
-            helper.setSubject("Teste de envio - API SANEARH");
-            helper.setText("E-mail enviado com sucesso!");
-
-            mailSender.send(msg);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Erro no teste: " + e.getMessage());
-        }
-    }
 }
